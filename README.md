@@ -1,6 +1,6 @@
 # poshpotato
 
-An attempt at creating an android app for streaming google drive videos
+An Attempt to Build a Streaming application for google Drive videos
 
 ## Getting Started
 
