@@ -51,6 +51,7 @@ class View extends StatelessWidget{
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black,title: Center(child:const Text('Posh Potato')),) ,
       body: Container(
           decoration: new BoxDecoration(color: new Color(0xff000000)),
           child: new GridView.count(primary: false,

@@ -29,7 +29,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.network(
-      'https://www.googleapis.com/drive/v3/files/1-Z_grNLAg2DP9wyrKpeaXKQEI2MJEBNX?alt=media&key=AIzaSyAzmkNUwmTLpwQNmTT5UKMQ1AftcVBJ7D4',
+      '',
     );
 
     // Initialize the controller and store the Future for later use.
