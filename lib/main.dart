@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'homepage.dart';
-
+import 'package:flutter/services.dart';
 void main() => runApp(Posh());
 
 class Posh extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -31,10 +34,10 @@ class AppTabBar extends StatelessWidget {
             backgroundColor:  Colors.black ,
             bottomNavigationBar: TabBar(
                 tabs: [
-                  Tab(icon: Icon(Icons.home,), text: "Home",),
+                  Tab(icon: Icon(Icons.movie,), text: "Movies",),
+                  Tab(icon: Icon(Icons.tv), text: "TV"),
+                  Tab(icon: Icon(Icons.favorite), text: "Favourates"),
                   Tab(icon: Icon(Icons.search), text: "Search"),
-                  Tab(icon: Icon(Icons.file_download), text: "Downloads"),
-                  Tab(icon: Icon(Icons.list), text: "Settings"),
                 ],
                 unselectedLabelColor: Colors.tealAccent,
                 labelColor: Colors.white,
@@ -43,9 +46,9 @@ class AppTabBar extends StatelessWidget {
             body: TabBarView(
               children: [
                 HomePage(),
+                Center( child: Text("TV")),
+                Center( child: Text("Favourates"),),
                 Center( child: Text("Search")),
-                Center( child: Text("Downloads"),),
-                Center( child: Text("Settings")),
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'display.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 class HomePage extends StatelessWidget {
   @override
@@ -17,6 +18,7 @@ class HomePage extends StatelessWidget {
   }
 }
 List _listings = new List();
+List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
 List _getchildren() {
   List listings = new List<Widget>();
@@ -24,14 +26,16 @@ List _getchildren() {
   for (i = 0; i < 50; i++) {
     listings.add(
        InkWell(
-      child:Container(
+        child:Container(
         //padding: const EdgeInsets.all(8),
           height: 100,
           width: 100,
           color:const Color(0x33000066),
-          child: new Image.asset('assets/images/westworld.jpg',fit: BoxFit.fill)
+          child: ClipRRect(borderRadius:BorderRadius.circular(16.0),
+              child : new Image.asset(ch[i%2],fit: BoxFit.fill))
       ),
          onTap: ()=>Get.to(DisplayPage()),
+         onDoubleTap: (){},
 
       ),
 
