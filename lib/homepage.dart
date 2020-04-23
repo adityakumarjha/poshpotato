@@ -45,11 +45,11 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
  _getchildren() {
   List listings = new List<Widget>();
   int i = 0;
-  int len=values.length;
-  print(values);
+  int len=all.length;
+  print(all);
   print(len);
-  for (i = 0; i < values.length; i++) {
-    var f=values[i][1];
+  for (i = 0; i < all.length; i++) {
+    var f=all[i].id;
     Future<Album> fetchAlbum() async {
       final response= await http.get('http://www.omdbapi.com/?i=$f&apikey=ed6be837');
       if (response.statusCode == 200) {
@@ -80,7 +80,7 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                         child:CachedNetworkImage(
                             imageUrl:snapshot.data.img) ,
                         onTap: ()=>Get.to(DisplayPage(snapshot.data.img)),
-                        onDoubleTap: (){print(values);},
+                        onDoubleTap: (){print(all);},
                       );
                     } else if (snapshot.hasError) {
                       return Text("error");
