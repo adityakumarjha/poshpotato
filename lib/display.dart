@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:poshpotato/videop.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 class DisplayPage extends StatelessWidget {
+ String  img='';
+ DisplayPage(String i)
+ {
+   img=i;
+ }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,18 +17,28 @@ class DisplayPage extends StatelessWidget {
           primaryColor: Colors.black,
           brightness: Brightness.dark
       ),
-      home:Movie(),
+      home:Movie(img),
     );
   }
 }
 
 class Movie extends  StatefulWidget
 {
+  String img;
+  Movie(String i)
+  {
+    img=i;
+  }
   @override
-  _MovieState createState()=>_MovieState();}
+  _MovieState createState()=>_MovieState(img);}
 
   class _MovieState extends State<Movie>
 {
+  String img;
+  _MovieState(String i)
+  {
+    img=i;
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -37,7 +53,8 @@ class Movie extends  StatefulWidget
                             alignment: AlignmentDirectional.bottomCenter,
                             children:<Widget>
                               [ClipRRect(borderRadius:BorderRadius.circular(16.0),
-                                child :new Image.asset('assets/images/tbbt.jpg',fit: BoxFit.fill)),
+                                child :CachedNetworkImage(
+                                    imageUrl:img)),
                               Container(
                                 child: new FlatButton(
                                   child: Container(
@@ -51,7 +68,7 @@ class Movie extends  StatefulWidget
             )
         ),
                   Container(
-                    margin: const EdgeInsets.only(left: 90.0, right: 20.0) ,
+                    margin: const EdgeInsets.only(left: 93.0, right: 20.0) ,
                     padding: const EdgeInsets.all(20),
                     child :Row(
                             children: <Widget>[
@@ -59,6 +76,7 @@ class Movie extends  StatefulWidget
                                  child: Text('480p',style: TextStyle(color: Colors.purpleAccent),),
                                   ),
                                OutlineButton(
+                                 onPressed:() => null ,
                                  child: Text('720p', style: TextStyle(color: Colors.purpleAccent),),
 
                                   )

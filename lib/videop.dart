@@ -1,8 +1,8 @@
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 class Video extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
