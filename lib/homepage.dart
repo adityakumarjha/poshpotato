@@ -19,8 +19,8 @@ class Album {
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
-      img: json['Poster'],
       Title: json['Title'],
+      img: json['Poster'],
     );
   }
 }

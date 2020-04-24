@@ -94,7 +94,7 @@ class _startState extends State<Start> {
         {
           print(valve[j].values);
           c=1;
-          if(check[j]==cell[i][1]){
+          if(check[j]==cell[i][3]){
             valve[j].values.add(cell[i][0]);
             c=0;
             break;
@@ -106,8 +106,8 @@ class _startState extends State<Start> {
 //      print(i);
       if(c==1)
         {
-          valve.add(new data("abc",cell[i][1],[cell[i][0]]));
-          check.add(cell[i][1]);
+          valve.add(new data("abc",cell[i][3],[cell[i][0]]));
+          check.add(cell[i][3]);
           c=0;
         }
     }
