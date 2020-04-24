@@ -13,14 +13,16 @@ class HomePage extends StatefulWidget {
   _Page createState()=>_Page();}
 class Album {
   final String img;
-  final String Title;
+   String Title;
+   String id;
 
-  Album({this.img,  this.Title});
+  Album({this.img,  this.Title,this.id});
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
-      Title: json['Title'],
-      img: json['Poster'],
+      Title: json["Title"],
+      img: json["Poster"],
+      id:json["imdbID"]
     );
   }
 }
@@ -79,7 +81,7 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                       return GestureDetector(
                         child:CachedNetworkImage(
                             imageUrl:snapshot.data.img) ,
-                        onTap: ()=>Get.to(DisplayPage(snapshot.data.img)),
+                        onTap: ()=>Get.to(DisplayPage(snapshot.data.img,snapshot.data.id)),
                         onDoubleTap: (){print(all);},
                       );
                     } else if (snapshot.hasError) {
@@ -87,7 +89,7 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                     }
 
                     // By default, show a loading spinner.
-                    return Text(snapshot.data.Title);
+                    return Center(child:Text("test"));
                   },
                 ),
             ),

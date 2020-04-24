@@ -9,8 +9,8 @@ var values=new List<List<String>>();
 class data{
   String title;
   String id;
-  var values=new List<String>();
-  data(this.title,this.id,this.values);
+  var episodes = new Map();
+  data(this.title,this.id,this.episodes);
 }
 List<data> all = new List<data>();
 
@@ -36,19 +36,7 @@ class Start extends StatefulWidget {
 class _startState extends State<Start> {
   var _credentials = r'''
 {
- "type": "service_account",
-  "project_id": "inspired-goal-274718",
-  "private_key_id": "72f247b41f3cc7ce26359d66e29e50ccfcf83a52",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo13wS+3HXaneQ\noISq/+X7y6i26C7k89g+x9tQzFKt7O5sXTRT+DLR6ESd1AvgvyzDqHV/iu0RiYai\nZhuwKel6Rm01aWbF6InroYfKSuwUO6yLc4lz2LSDiyDeK+YpgdGPMo3UfY9uFWAU\n9OCIT4vdLo8mzuVwSoEOY6krCtMrISpl1zfyS7z0/jaO+HpKGz26P6V7jwVvbLN9\nrJagtzJMoxSHhjuKQIFJwuQmjF0dEOYw1valmh1c9dPgwd0GbN25JGF3yCYz5N41\nEEGdhSud2BIAL2TFhBYvzT1qz/wfi95nY8QXnVkFVFv598roF2ChqGa6pht/guMp\nh3Y8qHNpAgMBAAECggEAEFmxu7ra1uQKCRjqUA7w7BXYVEIezHAquEWtYOEwfoRL\nwHW0LA+EiFxITMpsjgqlYJsvKbc/5utc/NwLgV9Fq2Ankj0PRUoUFRvy5O2ld/4h\nYu3A2VWagYSXHby9kLZwH0BjiLjSC3SJde4S0lB1uGkaVsVBZcLpRYX0K2VkdrAa\nghEISAwWl8UhYPPZ91WNbNlowgLyJGmNK8oonyorUMrHYAp7VG/1a6642sfVa1UH\nbalgF7T1G7gAB9kVs89jSHshjblMQrOtjDFsXqo3Pux8uJCgqwshD1drt+HralMG\nFv2iEXy+QcIl5h2dZNAAakHjRa97rhm7rz0x2ocV8wKBgQDoOxeJVOorbwMyNKeY\n08LYn9rjxZeuM9s7KzLU0fcLUkBbmmiAPpQfFOLRqa3b4hxm9srJ0cY7HKNt98QV\nuaNsCagprL3r/IqPJq5dJR2m+VlUUH8SL3+ZK+e3LcDlQ1LWU73RtrofA2cMW9qp\nl/GUmunVggXNNFN+b1lz9qej5wKBgQC6H3kOy6xePYajYPuCpGjcuh2Je+R/QL5m\n+8xADMwxlpuXT/0F+7F4yihQi+Mdh70vJlShcF/SK3aSC44+gCcVRzy5zkXd2BQs\nK3JOol8sBCALJtnXIIsriQe/gU3NNwEMB3pCXL2P3Xx2G91Lz62K6WMKffSdsa95\nBJtRpehELwKBgEB6R6qlnO66P9TssavI/8xNdeTPs7F2TGQ9NjvIoCLQj3XfhSw2\nM8H9doxn5BGs0d30n5ExYSyAYw/hPtwZUrpoY/xOLd0bnQzp3HeYGoeFq7uxLdbK\nwU6x1gASAACnlJRVY9qaNUrvEulnh2qW+UgdStcw5pN298ee+uMrlJf5AoGBAIk2\niK3Cs5lqbGboKaN/h5sqTno77xFtbrFHcqXJiYQJTz13B8cwbf7pslznNBFiL7Oh\n44R87vdneWtjv4MOQUHrmbY1fsZ09TI2+XdFNzqg8+qkwrZZVKBMznx9XBktMsVm\ngdiIvGtiUs5T7opkWcFuG8jxYLQc+YsTPVotIJWbAoGAWPUOx64zJMDL4pzDCglu\nT6RONztlcrO6g/53ArfjhMTQv12pq1sOM6b6fWUBn0+IxIE4/DP4Rcym+Wq78UHJ\nnQnwyPPIzCGqWoq/iGD0kGe0kUGTjNGShKqh5z0QJkRFPL+mqfDMjhhHP0UNmsS1\nIpIRqRiw+7RRPgvBcFhTW6U=\n-----END PRIVATE KEY-----\n",
-  "client_email": "gsheet@inspired-goal-274718.iam.gserviceaccount.com",
-  "client_id": "108128703971643406220",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheet%40inspired-goal-274718.iam.gserviceaccount.com"
-}
-''';
-  var _spreadsheetId = '1GSGl0KLWiKnMWnFKJ5JvTypfCLwevS9KrV8mdnayYPY';
+ 
 @override
   Widget build(BuildContext context) {
     return  FutureBuilder(
@@ -92,10 +80,10 @@ class _startState extends State<Start> {
       c=1;
       for(int j=0;j<check.length;j++)
         {
-          print(valve[j].values);
+          print(valve[j].episodes['2']);
           c=1;
           if(check[j]==cell[i][3]){
-            valve[j].values.add(cell[i][0]);
+            valve[j].episodes[cell[i][1]].add([cell[i][0],cell[i][2]]);
             c=0;
             break;
           }
@@ -106,7 +94,7 @@ class _startState extends State<Start> {
 //      print(i);
       if(c==1)
         {
-          valve.add(new data("abc",cell[i][3],[cell[i][0]]));
+          valve.add(new data("abc",cell[i][3],{cell[i][1]:[[],[cell[i][0],cell[i][2]]]}));
           check.add(cell[i][3]);
           c=0;
         }
