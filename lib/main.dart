@@ -6,13 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:gsheets/gsheets.dart';
 void main() => runApp(MyApp());
 var values=new List<List<String>>();
-class data{
-  String title;
-  String id;
-  var episodes = new Map();
-  data(this.title,this.id,this.episodes);
-}
-List<data> all = new List<data>();
+
+Map all = new Map();
 
 class MyApp extends StatelessWidget {
   @override
@@ -34,9 +29,7 @@ class Start extends StatefulWidget {
 }
 
 class _startState extends State<Start> {
-  var _credentials = r'''
-{
- 
+
 @override
   Widget build(BuildContext context) {
     return  FutureBuilder(
@@ -72,36 +65,38 @@ class _startState extends State<Start> {
     final ss = await gsheets.spreadsheet(_spreadsheetId);
     final sheet =  ss.worksheetByTitle('Sheet1');
     var cell = await sheet.values.allRows(fromColumn: 4, fromRow: 2);
-    List<data> valve = new List<data>();
-    List<String> go=new List();
+    Map valve=new Map();
     List<String> check=new List();
     int c=1;
     for(var i=0;i<cell.length;i++){
       c=1;
       for(int j=0;j<check.length;j++)
         {
-          print(valve[j].episodes['2']);
+
           c=1;
           if(check[j]==cell[i][3]){
-            valve[j].episodes[cell[i][1]].add([cell[i][0],cell[i][2]]);
+            valve[cell[i][3]]['episodes'][cell[i][1]].add([cell[i][0],cell[i][2]]);
+            valve[cell[i][3]]['type']="tv";
             c=0;
             break;
           }
 
         }
-//      print(check);
+      print(check);
 //      print(c);
 //      print(i);
       if(c==1)
         {
-          valve.add(new data("abc",cell[i][3],{cell[i][1]:[[],[cell[i][0],cell[i][2]]]}));
+          valve[cell[i][3]]={'title':"",'desc':"",'img': "",'type':"" ,'qual':"",'episodes':{cell[i][1]:[[cell[i][0],cell[i][2]]]}};
+          valve[cell[i][3]]['type']="mov";
           check.add(cell[i][3]);
+          print(valve[cell[i][3]]);
           c=0;
         }
     }
 
     all=valve;
-    return values;
+    return valve;
 
     // get worksheet by its title
   }

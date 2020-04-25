@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:gsheets/gsheets.dart';
 import 'dart:convert';
+import 'DisMov.dart';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 class HomePage extends StatefulWidget {
   @override
@@ -14,14 +15,16 @@ class HomePage extends StatefulWidget {
 class Album {
   final String img;
    String Title;
+   String desc;
    String id;
 
-  Album({this.img,  this.Title,this.id});
+  Album({this.img,  this.Title,this.desc,this.id});
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
       Title: json["Title"],
       img: json["Poster"],
+      desc:json["Plot"],
       id:json["imdbID"]
     );
   }
@@ -50,10 +53,9 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
   int len=all.length;
   print(all);
   print(len);
-  for (i = 0; i < all.length; i++) {
-    var f=all[i].id;
+  all.forEach((k,v) {
     Future<Album> fetchAlbum() async {
-      final response= await http.get('http://www.omdbapi.com/?i=$f&apikey=ed6be837');
+      final response= await http.get('http://www.omdbapi.com/?i=$k&apikey=ed6be837');
       if (response.statusCode == 200) {
         return Album.fromJson(json.decode(response.body));
       } else {
@@ -78,10 +80,13 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                   future: futureAlbum,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      all[k]["img"]=snapshot.data.img;
+                      all[k]['title']=snapshot.data.Title;
+                      all[k]['desc']=snapshot.data.desc;
                       return GestureDetector(
                         child:CachedNetworkImage(
                             imageUrl:snapshot.data.img) ,
-                        onTap: ()=>Get.to(DisplayPage(snapshot.data.img,snapshot.data.id)),
+                        onTap: ()=>got(snapshot.data.id),
                         onDoubleTap: (){print(all);},
                       );
                     } else if (snapshot.hasError) {
@@ -98,11 +103,17 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
       );
 
-  }
+  });
   return listings;
 }
 
-
+got(String id)
+{
+  if(all[id]['type']=="tv")
+    Get.to(DisplayPage(id));
+  else
+    Get.to(DisplayMov(id));
+}
 
 class View extends StatelessWidget{
   @override
