@@ -39,7 +39,7 @@ class Movie extends  StatefulWidget
 
   class _moviemake extends State<Movie>  with AutomaticKeepAliveClientMixin<Movie> {
     var dio = Dio();
-    var dropvalue='1';
+    var dropvalue='2';
   var i;
 
   _moviemake(this.i);
@@ -108,7 +108,7 @@ class Movie extends  StatefulWidget
                   padding: const EdgeInsets.all(20),
                   width:200,
                   child:Center(
-                child: new DropdownButton(value: dropvalue,onChanged: (newValue) {
+                child: new DropdownButton(underline:Container(height: 0,color: Colors.black,),elevation: 16,style:TextStyle(color: Colors.purpleAccent) ,value: dropvalue,onChanged: (newValue) {
                   setState(() {
                     dropvalue = newValue;
                   });
@@ -141,7 +141,7 @@ list(String i,var dio) {
   listings.add(Container(
     height: 50,
       child: ListTile(
-          title :Center(child :Text("Episode "+all[i]['episodes']['2'][j][1])),leading: Icon(Icons.play_circle_filled),trailing: FlatButton(child :Icon(Icons.file_download),onPressed: ()=> {lan(link(all[i]['episodes']['2'][j][0]))}))));
+          title :Center(child :Text("Episode "+all[i]['episodes']['2'][j][1])),leading: Icon(Icons.play_circle_filled),trailing: FlatButton(child :Icon(Icons.file_download),onPressed: ()=> {lan(link(all[i]['episodes']['2'][0][0]))}))));
   print(listings);
 }
   return listings;
@@ -161,7 +161,7 @@ List<DropdownMenuItem> drop(String i)
         drop.add(
           DropdownMenuItem(
             value: k.toString(),
-            child: Text('Season=$k'),
+            child: Text('Season $k'),
           )
         );
 
@@ -177,7 +177,7 @@ sort(var index,var a)
       {
         if(int.parse(all[index]['episodes'][a][i][1])>int.parse(all[index]['episodes'][a][j][1]))
           {
-            var temp=['0','0'];
+            var temp;
             temp=all[index]['episodes'][a][i];
             all[index]['episodes'][a][i]=all[index]['episodes'][a][j];
             all[index]['episodes'][a][j]=temp;
