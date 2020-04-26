@@ -20,7 +20,7 @@ class DisplayMov extends StatelessWidget {
                 shrinkWrap: true,
                 children:<Widget>[
             Container(
-            margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
             height: 350,
             width: 200,
             child: new Stack(
@@ -32,7 +32,7 @@ class DisplayMov extends StatelessWidget {
                   Container(
                       child: new FlatButton(
                         child: Container(
-                            child:Icon(Icons.play_circle_filled,color: Colors.white,size: 60,)),
+                            child:Icon(Icons.favorite,color: Colors.white,size: 60,)),
                         onPressed:()=>Get.to(Video()),
                       )
                   ),
@@ -55,7 +55,17 @@ class DisplayMov extends StatelessWidget {
 
     )
     ]
-    )),]
+    )),Row(
+
+                      children:<Widget>[ Container(
+                        margin: const EdgeInsets.only(left: 20.0, right: 10.0) ,
+                        width: 260,
+                        child: Text(all[id]['desc'],softWrap: true,style: TextStyle(color: Colors.blueAccent,),),
+                      ),
+                        OutlineButton(
+                          child: Text("IMDB :${all[id]['rating']}",style: TextStyle(color: Colors.yellowAccent,)),
+                        )
+                      ]),]
             )
         )
     );

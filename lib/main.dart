@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'homepage.dart';
+import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'credentials.dart';
+import 'sync.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:gsheets/gsheets.dart';
-void main() => runApp(MyApp());
+void main() async{
+
+  runApp(MyApp());}
 var values=new List<List<String>>();
 
 Map all = new Map();
 
 class MyApp extends StatelessWidget {
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -24,11 +35,20 @@ class MyApp extends StatelessWidget {
   }
 }
 class Start extends StatefulWidget {
+
   @override
   _startState createState() => new _startState();
 }
 
+
 class _startState extends State<Start> {
+  @override
+  void initState() {
+    _getThing().then((value){
+      print('Async done');
+    });
+    super.initState();
+  }
 
 @override
   Widget build(BuildContext context) {
@@ -58,11 +78,12 @@ class _startState extends State<Start> {
   }
 
  Future _id() async {
-
+  if(all.length!=0)
+    return all;
     // init GSheets
-    final gsheets = GSheets(_credentials);
+    final gsheets = GSheets(credentials);
     // fetch spreadsheet by its id
-    final ss = await gsheets.spreadsheet(_spreadsheetId);
+    final ss = await gsheets.spreadsheet(spreadsheetId);
     final sheet =  ss.worksheetByTitle('Sheet1');
     var cell = await sheet.values.allRows(fromColumn: 4, fromRow: 2);
     Map valve=new Map();
@@ -87,20 +108,29 @@ class _startState extends State<Start> {
 //      print(i);
       if(c==1)
         {
-          valve[cell[i][3]]={'title':"",'desc':"",'img': "",'type':"" ,'qual':"",'episodes':{cell[i][1]:[[cell[i][0],cell[i][2]]]}};
+          valve[cell[i][3]]={'title':"",'rating':'','desc':"",'img': "",'type':"" ,'qual':"",'episodes':{cell[i][1]:[[cell[i][0],cell[i][2]]]}};
           valve[cell[i][3]]['type']="mov";
           check.add(cell[i][3]);
           print(valve[cell[i][3]]);
           c=0;
         }
     }
-
+    var js=json.encode(all);
+    var st=js.toString();
+    print(st);
+    FileUtils.saveToFile(st);
     all=valve;
     return valve;
 
     // get worksheet by its title
   }
 
+  _getThing() async{
+  all=json.decode(await FileUtils.readFromFile());
+  print(all);
+  print("????????????????????????????????/");
+
+}
   Widget wait(BuildContext context, AsyncSnapshot snapshot) {
     return DefaultTabController(
         length: 4,
@@ -113,9 +143,9 @@ class _startState extends State<Start> {
             bottomNavigationBar: TabBar(
                 tabs: [
                   Tab(icon: Icon(Icons.movie,), text: "Movies",),
-                  Tab(icon: Icon(Icons.tv), text: "TV"),
                   Tab(icon: Icon(Icons.favorite), text: "Favourates"),
                   Tab(icon: Icon(Icons.search), text: "Search"),
+                  Tab(icon: Icon(Icons.sync), text: "Sync "),
                 ],
                 unselectedLabelColor: Colors.tealAccent,
                 labelColor: Colors.white,
@@ -124,9 +154,9 @@ class _startState extends State<Start> {
             body: TabBarView(
               children: [
                 HomePage(),
-                Center(child: Text("TV")),
-                Center(child: Text("Favourates"),),
-                Center(child: Text("Search")),
+                Center(child: Text("Favourates")),
+                Center(child: Text("Search"),),
+                Sync(),
               ],
             ),
           ),
@@ -151,3 +181,34 @@ class _startState extends State<Start> {
             )));
   }
 }
+
+
+
+
+class FileUtils {
+  static Future<String> get getFilePath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  static Future<File> get getFile async {
+    final path = await getFilePath;
+    return File('$path/myfile.txt');
+  }
+
+  static Future<File> saveToFile(String data) async {
+    final file = await getFile;
+    return file.writeAsString(data);
+  }
+
+  static Future<String> readFromFile() async {
+    try {
+      final file = await getFile;
+      String fileContents = await file.readAsString();
+      return fileContents;
+    } catch (e) {
+      return "";
+    }
+  }
+}
+
