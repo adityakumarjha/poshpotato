@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poshpotato/main.dart';
 import 'display.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:gsheets/gsheets.dart';
 import 'dart:convert';
 import 'DisMov.dart';
+import 'credentials.dart';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 class HomePage extends StatefulWidget {
   HomePage() : super();
@@ -28,7 +30,7 @@ class Album {
       img: json["Poster"],
       desc:json["Plot"],
       id:json["imdbID"],
-      rating:json["Ratings"][0]["Value"]
+      rating:json["imdbRating"]
     );
   }
 }
@@ -61,11 +63,12 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
   List listings = new List<Widget>();
   int i = 0;
   int len=all.length;
-  print(all);
-  print(len);
+  //print(all);
+  //print(len);
   all.forEach((k,v) {
     Future<Album> fetchAlbum() async {
-      final response= await http.get('http://www.omdbapi.com/?i=$k&apikey=ed6be837');
+      final response= await http.get('http://www.omdbapi.com/?i=$k&apikey=$omdb');
+      print('http://www.omdbapi.com/?i=$k&apikey=ed6be837'.toString());
       if (response.statusCode == 200) {
         return Album.fromJson(json.decode(response.body));
       } else {
@@ -94,9 +97,11 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                   future: futureAlbum,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      print(snapshot.data.img);
                       all[k]["img"]=snapshot.data.img;
                       all[k]['title']=snapshot.data.Title;
                       all[k]['desc']=snapshot.data.desc;
+                      if(snapshot.data.rating!=null)
                       all[k]['rating']=snapshot.data.rating;
                       return GestureDetector(
                         child:CachedNetworkImage(
@@ -119,7 +124,7 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
       );
     var js=json.encode(all);
     var st=js.toString();
-    print(st);
+    //print(st);
     FileUtils.saveToFile(st);
   });
   return listings;
@@ -173,4 +178,13 @@ void _portraitModeOnly() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+}
+
+lan(var url) async{
+  launch(url);
+}
+
+like(String id)
+{
+liked.add(id);
 }

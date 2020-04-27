@@ -33,7 +33,7 @@ class DisplayMov extends StatelessWidget {
                       child: new FlatButton(
                         child: Container(
                             child:Icon(Icons.favorite,color: Colors.white,size: 60,)),
-                        onPressed:()=>Get.to(Video()),
+                        onPressed:()=>Get.to(like(id)),
                       )
                   ),
 
@@ -63,6 +63,7 @@ class DisplayMov extends StatelessWidget {
                         child: Text(all[id]['desc'],softWrap: true,style: TextStyle(color: Colors.blueAccent,),),
                       ),
                         OutlineButton(
+                          onPressed: ()=>{lan("https://www.imdb.com/title/$id/")},
                           child: Text("IMDB :${all[id]['rating']}",style: TextStyle(color: Colors.yellowAccent,)),
                         )
                       ]),]

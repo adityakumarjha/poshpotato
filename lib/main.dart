@@ -16,6 +16,7 @@ void main() async{
 var values=new List<List<String>>();
 
 Map all = new Map();
+var liked=['123'];
 
 class MyApp extends StatelessWidget {
 
@@ -43,12 +44,12 @@ class Start extends StatefulWidget {
 
 class _startState extends State<Start> {
   @override
-  void initState() {
-    _getThing().then((value){
-      print('Async done');
-    });
-    super.initState();
-  }
+//  void initState() {
+//    _getThing().then((value){
+//      print('Async done');
+//    });
+//    super.initState();
+//  }
 
 @override
   Widget build(BuildContext context) {
@@ -78,8 +79,8 @@ class _startState extends State<Start> {
   }
 
  Future _id() async {
-  if(all.length!=0)
-    return all;
+//  if(all.length!=0)
+//    return all;
     // init GSheets
     final gsheets = GSheets(credentials);
     // fetch spreadsheet by its id
@@ -89,6 +90,7 @@ class _startState extends State<Start> {
     Map valve=new Map();
     List<String> check=new List();
     int c=1;
+    print(cell.length);
     for(var i=0;i<cell.length;i++){
       c=1;
       for(int j=0;j<check.length;j++)
@@ -96,22 +98,30 @@ class _startState extends State<Start> {
 
           c=1;
           if(check[j]==cell[i][3]){
+            print(valve[cell[i][3]]['episodes'].containsKey(cell[i][1]));
+            if(valve[cell[i][3]]['episodes'].containsKey(cell[i][1])==true){
             valve[cell[i][3]]['episodes'][cell[i][1]].add([cell[i][0],cell[i][2]]);
-            valve[cell[i][3]]['type']="tv";
+            valve[cell[i][3]]['type']="tv";}
+            if(valve[cell[i][3]]['episodes'].containsKey(cell[i][1])==false)
+              valve[cell[i][3]]['episodes'][cell[i][1]]=[[cell[i][0],cell[i][2]]];
             c=0;
+            print(valve);
             break;
           }
 
         }
-      print(check);
+      //print(check);
 //      print(c);
 //      print(i);
       if(c==1)
         {
           valve[cell[i][3]]={'title':"",'rating':'','desc':"",'img': "",'type':"" ,'qual':"",'episodes':{cell[i][1]:[[cell[i][0],cell[i][2]]]}};
+          if(cell[i][1]=='0')
           valve[cell[i][3]]['type']="mov";
+          else
+            valve[cell[i][3]]['type']="tv";
           check.add(cell[i][3]);
-          print(valve[cell[i][3]]);
+          print(cell[i][3]);
           c=0;
         }
     }
@@ -127,8 +137,8 @@ class _startState extends State<Start> {
 
   _getThing() async{
   all=json.decode(await FileUtils.readFromFile());
-  print(all);
-  print("????????????????????????????????/");
+  //print(all);
+ // print("????????????????????????????????/");
 
 }
   Widget wait(BuildContext context, AsyncSnapshot snapshot) {
