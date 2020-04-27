@@ -4,6 +4,7 @@ import 'package:poshpotato/main.dart';
 import 'homepage.dart';
 import 'package:poshpotato/videop.dart';
 import 'dart:async';
+import 'credentials.dart';
 import 'package:flutter/services.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -66,7 +67,12 @@ class DisplayMov extends StatelessWidget {
                           onPressed: ()=>{lan("https://www.imdb.com/title/$id/")},
                           child: Text("IMDB :${all[id]['rating']}",style: TextStyle(color: Colors.yellowAccent,)),
                         )
-                      ]),]
+                      ]),
+                  Center(
+                      child: OutlineButton(
+                        child: Icon(Icons.play_circle_filled,color:Colors.purpleAccent,size: 100,),onPressed: ()=>Get.to(VideoApp('https://www.googleapis.com/drive/v2/files/${all[id]['episodes']['0'][0][0]}?alt=media&key=$gapi')),
+                      ),)
+                ]
             )
         )
     );

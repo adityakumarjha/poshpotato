@@ -3,6 +3,7 @@ import 'main.dart';
 import 'package:file_utils/file_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dio/dio.dart';
+
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,18 +40,21 @@ class Movie extends  StatefulWidget
   @override
   _moviemake createState()=>new _moviemake(i);}
 
-  class _moviemake extends State<Movie>  with AutomaticKeepAliveClientMixin<Movie> {
+  class _moviemake extends State<Movie>  with AutomaticKeepAliveClientMixin<Movie>,PortraitStatefulModeMixin<Movie> {
     var dio = Dio();
     var i;
     var col;
     var dropvalue;
   void initState() {
     col=Colors.white;
+    _portraitModeOnly();
     if(liked.contains(i))
       col=Colors.red;
   }
+
   @override
   _moviemake(this.i){
+    _portraitModeOnly();
    all[i]['episodes'].forEach((k,v){
       print(k);
       dropvalue=k;
@@ -142,6 +146,11 @@ class Movie extends  StatefulWidget
     ));
   }
 
+    @override
+    void dispose() {
+      super.dispose();
+      _enableRotation();
+    }
 }
 //list(String i,var dio) {
 //
@@ -302,7 +311,7 @@ for(int j=0;j<all[i]['episodes'][dvalue].length;j++){
         Container(
           width: 50,
           child: FlatButton(
-            child:Icon(Icons.play_arrow,size: 50,color: Colors.blueAccent,) ,onPressed:()=>launch('https://www.googleapis.com/drive/v2/files/${all[i]['episodes'][dvalue][j][0]}?alt=media&key=$gapi') ,),
+            child:Icon(Icons.play_arrow,size: 50,color: Colors.blueAccent,) ,onPressed:()=>Get.to(VideoApp('https://www.googleapis.com/drive/v2/files/${all[i]['episodes'][dvalue][j][0]}?alt=media&key=$gapi')) ,),
         ),
         Container(
           padding: const EdgeInsets.only(left: 30, right: 10.0) ,
@@ -322,4 +331,25 @@ for(int j=0;j<all[i]['episodes'][dvalue].length;j++){
 
 }
 return listings;
+}
+void _enableRotation() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+}
+
+void _portraitModeOnly() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+}
+mixin PortraitStatefulModeMixin<T extends StatefulWidget> on State<T> {
+  @override
+  Widget build(BuildContext context) {
+    _portraitModeOnly();
+    return null;
+  }
 }

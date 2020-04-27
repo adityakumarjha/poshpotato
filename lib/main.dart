@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'homepage.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'credentials.dart';
@@ -159,7 +160,8 @@ class _startState extends State<Start> {
                 ],
                 unselectedLabelColor: Colors.tealAccent,
                 labelColor: Colors.white,
-                indicatorColor: Colors.transparent
+                indicatorColor: Colors.transparent,
+
             ),
             body: TabBarView(
               children: [

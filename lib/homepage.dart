@@ -35,9 +35,15 @@ class Album {
   }
 }
 
-class _Page extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage> , PortraitStatefulModeMixin<HomePage>  {
+class _Page extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>   {
   @override
   bool get wantKeepAlive => true;
+  void intiState()
+  {
+
+    super.initState();
+    _portraitModeOnly();
+  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -53,9 +59,10 @@ class _Page extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>
   }
   @override
   void dispose() {
-    super.dispose();
+    _enableRotation();
   }
 }
+
 List _listings = new List();
 List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
@@ -187,4 +194,12 @@ lan(var url) async{
 like(String id)
 {
 liked.add(id);
+}
+void _enableRotation() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 }
