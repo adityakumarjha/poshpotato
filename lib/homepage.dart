@@ -35,18 +35,15 @@ class Album {
   }
 }
 
-class _Page extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>   {
+class _Page extends State<HomePage> {
   @override
   bool get wantKeepAlive => true;
   void intiState()
   {
-
-    super.initState();
     _portraitModeOnly();
   }
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return MaterialApp(
       navigatorKey: Get.key,
       debugShowCheckedModeBanner: false,

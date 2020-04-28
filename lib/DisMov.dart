@@ -20,10 +20,10 @@ class DisplayMov extends StatelessWidget {
             child :ListView(
                 shrinkWrap: true,
                 children:<Widget>[
-            Container(
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            height: 350,
-            width: 200,
+            Center(
+//            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+//            height: 350,
+//            width: 200,
             child: new Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                 children:<Widget>
@@ -59,13 +59,13 @@ class DisplayMov extends StatelessWidget {
     )),Row(
 
                       children:<Widget>[ Container(
-                        margin: const EdgeInsets.only(left: 20.0, right: 10.0) ,
-                        width: 260,
+                        margin: const EdgeInsets.only(left: 10.0, right: 10.0) ,
+                        width: 250,
                         child: Text(all[id]['desc'],softWrap: true,style: TextStyle(color: Colors.blueAccent,),),
                       ),
                         OutlineButton(
                           onPressed: ()=>{lan("https://www.imdb.com/title/$id/")},
-                          child: Text("IMDB :${all[id]['rating']}",style: TextStyle(color: Colors.yellowAccent,)),
+                          child: Container(child: Text("IMDB :${all[id]['rating']}",style: TextStyle(color: Colors.yellowAccent)),width: 100,),
                         )
                       ]),
                   Center(

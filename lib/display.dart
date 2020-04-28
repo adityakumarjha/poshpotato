@@ -23,7 +23,7 @@ class DisplayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      //debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColor: Colors.black,
           brightness: Brightness.dark
@@ -40,7 +40,7 @@ class Movie extends  StatefulWidget
   @override
   _moviemake createState()=>new _moviemake(i);}
 
-  class _moviemake extends State<Movie>  with AutomaticKeepAliveClientMixin<Movie>,PortraitStatefulModeMixin<Movie> {
+  class _moviemake extends State<Movie>  with AutomaticKeepAliveClientMixin<Movie> {
     var dio = Dio();
     var i;
     var col;

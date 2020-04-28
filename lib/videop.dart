@@ -5,6 +5,8 @@ import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
+import 'package:wakelock/wakelock.dart';
+import 'package:after_layout/after_layout.dart';
 class VideoApp extends StatefulWidget {
   String url;
   VideoApp(this.url);
@@ -13,7 +15,7 @@ class VideoApp extends StatefulWidget {
   _VideoAppState createState() => _VideoAppState(url);
 }
 
-class _VideoAppState extends State<VideoApp> {
+class _VideoAppState extends State<VideoApp> with AfterLayoutMixin<VideoApp>{
   String url;
   _VideoAppState(this.url);
   VideoPlayerController _videoPlayerController1;
@@ -21,8 +23,13 @@ class _VideoAppState extends State<VideoApp> {
   static const _rotationChannel = const MethodChannel('zgadula/orientation');
 
   @override
+  void afterFirstLayout(BuildContext context) {
+    _chewieController.enterFullScreen();
+  }
+  @override
   void initState() {
    super.initState();
+   Wakelock.enable();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -36,7 +43,7 @@ class _VideoAppState extends State<VideoApp> {
         aspectRatio: 16 / 9,
         autoPlay: true,
         allowFullScreen: true,
-        fullScreenByDefault: true,
+        //fullScreenByDefault: true,
         //looping: false,
       //showControlsOnInitialize: true,
 
@@ -44,6 +51,7 @@ class _VideoAppState extends State<VideoApp> {
     }
   void dispose()
   {
+    Wakelock.disable();
     _videoPlayerController1.dispose();
     super.dispose();
   }
