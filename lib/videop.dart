@@ -1,99 +1,136 @@
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-class Video extends StatelessWidget {
+import 'package:auto_orientation/auto_orientation.dart';
+import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
+import 'package:wakelock/wakelock.dart';
+import 'package:after_layout/after_layout.dart';
+class VideoApp extends StatefulWidget {
+  String url;
+  VideoApp(this.url);
+  @override
+
+  _VideoAppState createState() => _VideoAppState(url);
+}
+
+class _VideoAppState extends State<VideoApp> with AfterLayoutMixin<VideoApp>{
+  String url;
+  _VideoAppState(this.url);
+  VideoPlayerController _videoPlayerController1;
+  ChewieController _chewieController;
+  static const _rotationChannel = const MethodChannel('zgadula/orientation');
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Player Demo',
-      home: VideoPlayerScreen(),
-    );
+  void afterFirstLayout(BuildContext context) {
+    _chewieController.enterFullScreen();
   }
-}
-
-class VideoPlayerScreen extends StatefulWidget {
-  VideoPlayerScreen({Key key}) : super(key: key);
-
-  @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
-}
-
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
-
   @override
   void initState() {
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
-    _controller = VideoPlayerController.network(
-      '',
-    );
+   super.initState();
+   Wakelock.enable();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+    try {
+      _rotationChannel.invokeMethod('setLandscape');
+    } catch (error) {}
+    _videoPlayerController1 = VideoPlayerController.network(url);
+    _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController1,
+        aspectRatio: 16 / 9,
+        autoPlay: true,
+        allowFullScreen: true,
+        //fullScreenByDefault: true,
+        //looping: false,
+      //showControlsOnInitialize: true,
 
-    // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Use the controller to loop the video.
-    _controller.setLooping(true);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    _controller.dispose();
-
+      showControls: true,);
+    }
+  void dispose()
+  {
+    Wakelock.disable();
+    _videoPlayerController1.dispose();
     super.dispose();
   }
+//    materialProgressColors: ChewieProgressColors(
+//    playedColor: Colors.blueAccent,
+//    handleColor: Colors.blue,
+//
+//      backgroundColor: Colors.black,
+//      bufferedColor: Colors.lightGreen,
+//    ),
+//    placeholder: Container(
+//    color: Colors.black,
+//    ),
+        //deviceOrientationsAfterFullScreen: [DeviceOrientation.landscapeLeft],
+    //autoInitialize: true,
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+                home: Scaffold(
+                  resizeToAvoidBottomPadding: false,
+                  body: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    color: Colors.black,
+                    child: Chewie(
+                      controller: _chewieController,
+                    )),
+                  ),
+                );
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Butterfly Video'),
-      ),
-      // Use a FutureBuilder to display a loading spinner while waiting for the
-      // VideoPlayerController to finish initializing.
-      body: FutureBuilder(
-        future: _initializeVideoPlayerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the VideoPlayerController has finished initialization, use
-            // the data it provides to limit the aspect ratio of the video.
-            return AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              // Use the VideoPlayer widget to display the video.
-              child: VideoPlayer(_controller),
-            );
-          } else {
-            // If the VideoPlayerController is still initializing, show a
-            // loading spinner.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Wrap the play or pause in a call to `setState`. This ensures the
-          // correct icon is shown.
-          setState(() {
-            // If the video is playing, pause it.
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              // If the video is paused, play it.
-              _controller.play();
             }
-          });
-        },
-        // Display the correct icon depending on the state of the player.
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
+        }
+      // Try playing around with some of these other options:
+
+
+
+
+
+
+
+//class VideoScaffold extends StatefulWidget {
+//  const VideoScaffold({Key key, this.child}) : super(key: key);
+//  final Widget child;
+//
+//  @override
+//  State<StatefulWidget> createState() => _VideoScaffoldState();
+//}
+//
+//class _VideoScaffoldState extends State<VideoScaffold> {
+//  static const _rotationChannel = const MethodChannel('zgadula/orientation');
+//  @override
+//  void initState() {
+//    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.landscapeRight,
+//      DeviceOrientation.landscapeLeft,
+//    ]);
+////    AutoOrientation.landscapeLeftMode();
+//    super.initState();
+//    try {
+//      _rotationChannel.invokeMethod('setLandscape');
+//    } catch (error) {}
+//
+//  }
+//
+//  @override
+//  dispose() {
+////    SystemChrome.setPreferredOrientations([
+////      DeviceOrientation.portraitUp,
+////      DeviceOrientation.portraitDown,
+////
+////    ]);
+//    AutoOrientation.portraitUpMode();
+//    super.dispose();
+//
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return widget.child;
+//  }
+//}

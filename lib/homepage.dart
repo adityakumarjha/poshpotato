@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:poshpotato/main.dart';
 import 'display.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:gsheets/gsheets.dart';
 import 'dart:convert';
+import 'DisMov.dart';
+import 'credentials.dart';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 class HomePage extends StatefulWidget {
+  HomePage() : super();
   @override
   _Page createState()=>_Page();}
 class Album {
   final String img;
    String Title;
+   String desc;
    String id;
+   String rating;
 
-  Album({this.img,  this.Title,this.id});
+  Album({this.img,  this.Title,this.desc,this.id,this.rating});
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
       Title: json["Title"],
       img: json["Poster"],
-      id:json["imdbID"]
+      desc:json["Plot"],
+      id:json["imdbID"],
+      rating:json["imdbRating"]
     );
   }
 }
 
 class _Page extends State<HomePage> {
-
+  @override
+  bool get wantKeepAlive => true;
+  void intiState()
+  {
+    _portraitModeOnly();
+  }
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: Get.key,
@@ -40,7 +54,12 @@ class _Page extends State<HomePage> {
       home: View(),
     );
   }
+  @override
+  void dispose() {
+    _enableRotation();
+  }
 }
+
 List _listings = new List();
 List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
@@ -48,12 +67,12 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
   List listings = new List<Widget>();
   int i = 0;
   int len=all.length;
-  print(all);
-  print(len);
-  for (i = 0; i < all.length; i++) {
-    var f=all[i].id;
+  //print(all);
+  //print(len);
+  all.forEach((k,v) {
     Future<Album> fetchAlbum() async {
-      final response= await http.get('http://www.omdbapi.com/?i=$f&apikey=ed6be837');
+      final response= await http.get('http://www.omdbapi.com/?i=$k&apikey=$omdb');
+      print('http://www.omdbapi.com/?i=$k&apikey=ed6be837'.toString());
       if (response.statusCode == 200) {
         return Album.fromJson(json.decode(response.body));
       } else {
@@ -61,6 +80,10 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
       }
     }
+
+
+
+
 
 //    print(img);
     var futureAlbum = fetchAlbum();
@@ -78,10 +101,16 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
                   future: futureAlbum,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      print(snapshot.data.img);
+                      all[k]["img"]=snapshot.data.img;
+                      all[k]['title']=snapshot.data.Title;
+                      all[k]['desc']=snapshot.data.desc;
+                      if(snapshot.data.rating!=null)
+                      all[k]['rating']=snapshot.data.rating;
                       return GestureDetector(
                         child:CachedNetworkImage(
                             imageUrl:snapshot.data.img) ,
-                        onTap: ()=>Get.to(DisplayPage(snapshot.data.img,snapshot.data.id)),
+                        onTap: ()=>got(snapshot.data.id),
                         onDoubleTap: (){print(all);},
                       );
                     } else if (snapshot.hasError) {
@@ -97,16 +126,31 @@ List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
 
       );
-
-  }
+    var js=json.encode(all);
+    var st=js.toString();
+    //print(st);
+    FileUtils.saveToFile(st);
+  });
   return listings;
 }
 
+got(String id)
+{
+  if(all[id]['type']=="tv")
+    Get.to(DisplayPage(id));
+  else
+    Get.to(DisplayMov(id));
+}
 
-
-class View extends StatelessWidget{
+class View extends StatefulWidget {
   @override
+  _view createState() => new _view();
+ }
 
+  class _view extends  State<View>  with AutomaticKeepAliveClientMixin<View>{
+   @override
+   bool get wantKeepAlive => true;
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.black,title: Center(child:const Text('Posh Potato')),) ,
@@ -124,4 +168,35 @@ class View extends StatelessWidget{
 
     );
   }
+}
+
+mixin PortraitStatefulModeMixin<T extends StatefulWidget> on State<T> {
+  @override
+  Widget build(BuildContext context) {
+    _portraitModeOnly();
+    return null;
+  }
+}
+
+void _portraitModeOnly() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+}
+
+lan(var url) async{
+  launch(url);
+}
+
+like(String id)
+{
+liked.add(id);
+}
+void _enableRotation() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 }
