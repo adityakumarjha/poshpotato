@@ -1,6 +1,6 @@
 # poshpotato
 
- A Streaming application written in flutter for google Drive videos with basic navigations and inbuilt video player with caching implimentation.
+ A Streaming application written in flutter for google Drive videos with basic navigations and inbuilt video player with caching implimentation.(In Development)
 
 ## Getting Started
 
