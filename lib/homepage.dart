@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:poshpotato/main.dart';
 import 'display.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart' as http;
+import 'package:gsheets/gsheets.dart';
+import 'dart:convert';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   @override
+  _Page createState()=>_Page();}
+class Album {
+  final String img;
+   String Title;
+   String id;
+
+  Album({this.img,  this.Title,this.id});
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      Title: json["Title"],
+      img: json["Poster"],
+      id:json["imdbID"]
+    );
+  }
+}
+
+class _Page extends State<HomePage> {
+
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: Get.key,
@@ -20,26 +44,60 @@ class HomePage extends StatelessWidget {
 List _listings = new List();
 List<String> ch=['assets/images/westworld.jpg','assets/images/tbbt.jpg'];
 
-List _getchildren() {
+ _getchildren() {
   List listings = new List<Widget>();
   int i = 0;
-  for (i = 0; i < 50; i++) {
+  int len=all.length;
+  print(all);
+  print(len);
+  for (i = 0; i < all.length; i++) {
+    var f=all[i].id;
+    Future<Album> fetchAlbum() async {
+      final response= await http.get('http://www.omdbapi.com/?i=$f&apikey=ed6be837');
+      if (response.statusCode == 200) {
+        return Album.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load album');
+
+      }
+    }
+
+//    print(img);
+    var futureAlbum = fetchAlbum();
+    //var pos=json.decode(futureAlbumimg);
     listings.add(
-       InkWell(
-        child:Container(
-        //padding: const EdgeInsets.all(8),
-          height: 100,
-          width: 100,
-          color:const Color(0x33000066),
-          child: ClipRRect(borderRadius:BorderRadius.circular(16.0),
-              child : new Image.asset(ch[i%2],fit: BoxFit.fill))
-      ),
-         onTap: ()=>Get.to(DisplayPage()),
-         onDoubleTap: (){},
 
-      ),
+        Container(
+          //padding: const EdgeInsets.all(8),
+            height: 100,
+            width: 100,
+            color:const Color(0x33000066),
+            child: ClipRRect(borderRadius:BorderRadius.circular(16.0),
+                child :
+                FutureBuilder<Album>(
+                  future: futureAlbum,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GestureDetector(
+                        child:CachedNetworkImage(
+                            imageUrl:snapshot.data.img) ,
+                        onTap: ()=>Get.to(DisplayPage(snapshot.data.img,snapshot.data.id)),
+                        onDoubleTap: (){print(all);},
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("error");
+                    }
 
-    );
+                    // By default, show a loading spinner.
+                    return Center(child:Text("test"));
+                  },
+                ),
+            ),
+              ),
+
+
+      );
+
   }
   return listings;
 }
@@ -66,4 +124,4 @@ class View extends StatelessWidget{
 
     );
   }
-  }
+}
